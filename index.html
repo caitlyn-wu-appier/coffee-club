@@ -1,241 +1,318 @@
-import React, { useState } from "react";
+// ...existing code...
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>設備清單 — Coffee Club</title>
 
-const FLOORS = [
-  {
-    id: "7F",
-    items: [
-      { key: "kettle", title: "FELLOW Stagg EKG 電子溫控手沖壺 白 600ml" },
-      { key: "grinder", title: "1Z X-Ultra", link: "https://1zpresso.coffee/product/xultra/", burr: "1Z X-Ultra 40mm 七芯刀盤" },
-      { key: "scale", title: "黑鏡DUO" },
-      { key: "dripper", title: "switch / v60 / 星芒 / 冰瞳" },
-    ],
-  },
-  {
-    id: "8F",
-    items: [
-      { key: "kettle", title: "Timemore Smart 溫控手沖壺 黑 800ml" },
-      { key: "grinder", title: "泰摩 栗子S3 手搖磨豆機", link: "https://www.jmi-mart.com/product/detail/1751876", burr: "栗子刀盤 S2C890", burrLink: "https://m.media-amazon.com/images/I/51f1N3s0qXL._AC_UF894,1000_QL80_.jpg" },
-      { key: "scale", title: "HARIO 北極星咖啡秤" },
-      { key: "dripper", title: "v60 / 川流 / 花瓣" },
-    ],
-  },
-  {
-    id: "9F",
-    items: [
-      { key: "kettle", title: "FELLOW Stagg EKG 電子溫控手沖壺 黑 600ml" },
-      { key: "grinder", title: "泰摩手搖 C3", link: "https://buoncaffe.com.tw/products/timemore-grinder-c3/", burr: "C3 刀盤 S2C660", burrLink: "https://www.timemore.com.au/cdn/shop/products/Timemore-S2C660.jpg?v=1681275552&width=2048" },
-      { key: "scale", title: "(無/待補)" },
-      { key: "dripper", title: "v60 / 川流 / 冰瞳" },
-    ],
-  },
-];
+  <!-- Tailwind for quick styling (dev) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-function Icon({ type }) {
-  const icons = {
-    kettle: "☕",
-    grinder: "🌀",
-    scale: "⚖️",
-    dripper: "🧊",
-  };
-  return <div className="text-3xl">{icons[type]}</div>;
-}
-
-export default function CoffeeEquipmentInteractive() {
-  const [activeFloorIndex, setActiveFloorIndex] = useState(0);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const activeFloor = FLOORS[activeFloorIndex];
-
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-6 md:p-10 font-sans">
-      <style>{`
-        a.no-hover:hover {
-          text-decoration: none !important;
-          color: inherit !important;
-        }
-      `}</style>
-      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden">
-        <header className="flex items-center justify-between p-6 border-b">
-          <div>
-            <h1 className="text-2xl font-semibold">設備清單</h1>
-            <p className="text-sm text-gray-500 mt-1">樓層按順序顯示：7F → 8F → 9F。點擊物品可查看詳情。</p>
-          </div>
-          <div className="flex gap-2">
-            {FLOORS.map((f, idx) => (
-              <button
-                key={f.id}
-                onClick={() => {
-                  setActiveFloorIndex(idx);
-                  setSelectedItem(null);
-                }}
-                className={`px-3 py-1 rounded-md text-sm font-medium ${idx === activeFloorIndex ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"}`}
-              >
-                {f.id}
-              </button>
-            ))}
-          </div>
-        </header>
-
-        <main className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:p-8">
-          <section className="md:col-span-2">
-            <div className="rounded-xl p-4 border bg-gray-50">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
-                {activeFloor.items.map((it) => (
-                  <button
-                    key={it.key + it.title}
-                    onClick={() => setSelectedItem({ ...it, floor: activeFloor.id })}
-                    className="group flex flex-col items-center gap-2 p-3 rounded-lg hover:shadow-md transition-shadow bg-white"
-                  >
-                    <Icon type={it.key} />
-                    <div className="text-xs text-center text-gray-700 px-1 font-medium" style={{ maxWidth: 140 }}>{it.title}</div>
-                    <div className="mt-1 text-xs text-gray-400">點擊查看</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <aside className="md:col-span-1">
-            <div className="sticky top-6 bg-gray-50 p-4 rounded-xl border h-full space-y-6">
-              <div>
-                <h3 className="text-sm font-semibold">詳情面板</h3>
-                {!selectedItem ? (
-                  <div className="text-sm text-gray-500 mt-3">尚未選取任何物品。點擊左側的圖示查看細節。</div>
-                ) : (
-                  <div className="mt-3 space-y-3">
-                    <div>
-                      <div className="text-sm text-gray-600">樓層</div>
-                      <div className="font-medium">{selectedItem.floor}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-600">設備</div>
-                      <div className="font-medium">{selectedItem.title}</div>
-                    </div>
-
-                    {selectedItem.link && (
-                      <div className="mt-4 border-t pt-3">
-                        <div className="text-sm text-gray-600 font-medium mb-2">產品連結</div>
-                        <a
-                          href={selectedItem.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 text-sm block break-all no-hover"
-                        >
-                          前往商品頁面
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {selectedItem?.burr && (
-                <div className="border-t pt-3">
-                  <h3 className="text-sm font-semibold mb-2">刀盤資訊</h3>
-                  <div className="text-sm text-gray-700">{selectedItem.burr}</div>
-                  {selectedItem.burrLink && (
-                    <img
-                      src={selectedItem.burrLink}
-                      alt={selectedItem.burr}
-                      className="mt-2 rounded-lg border object-contain max-h-60 w-full"
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          </aside>
-        </main>
-
-        {/* 刀盤介紹 */}
-        <section className="p-8 bg-white border-t">
-          <h2 className="text-2xl font-semibold mb-4">刀盤介紹</h2>
-          <div className="text-sm text-gray-700 leading-relaxed space-y-3">
-            <p>在研磨咖啡豆過程中，「刀盤」是直接影響粉粒分布、顆粒均勻度與風味表現的關鍵元件。根據 <a href="https://www.femobook.com.tw/blogs/coffee-information/186696" target="_blank" rel="noopener noreferrer" className="text-blue-600">Femobook</a> 的分析，不同形式的刀盤（平刀、錐刀、鬼齒刀）各有其特性。</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li><strong>平刀（Flat Burr）</strong>：粉粒分布集中，風味乾淨、明亮，適合追求層次分明的風味表現。</li>
-              <li><strong>錐刀（Conical Burr）</strong>：粉粒雙峰分佈，風味醇厚、層次豐富，保留更多香氣。</li>
-              <li><strong>鬼齒刀（Serrated Burr）</strong>：研磨速度快、顆粒均勻，風味平衡且乾淨。</li>
-            </ul>
-            <p>目前公司使用的刀盤型號為 <strong>S2C890</strong> 與 <strong>S2C660</strong>。</p>
-            
-            <div className="overflow-x-auto flex gap-4 pb-4">
-              <img src="https://ae01.alicdn.com/kf/S78f155549e64433cbdad5e1067d26ea8K.jpg" alt="S2C890" className="rounded-lg border mb-3 object-contain max-h-100 w-full" />
-            </div>
-            <p>參考文件：<a href="https://ptt.reviews/Coffee/E.NKiLFSkA6qEs" target="_blank" rel="noopener noreferrer" className="text-blue-600">[器材] 市面常見手搖磨豆機的錐刀設計理論 - PTT評價</a></p>
-
-          </div>
-        </section>
-
-        {/* 濾杯介紹區塊 */}
-        <section className="p-8 bg-white border-t">
-          <h2 className="text-2xl font-semibold mb-4">濾杯介紹</h2>
-          <div className="overflow-x-auto flex gap-4 pb-4">
-            {[
-              {
-                name: 'V60 濾杯',
-                img: 'https://w7.pngwing.com/pngs/717/935/png-transparent-brewed-coffee-espresso-dolce-gusto-hario-coffee-glass-coffee-saucer-thumbnail.png',
-                desc: '經典螺旋肋骨設計，流速快，風味乾淨明亮。',
-                link: 'https://www.hario.com.tw/?product=v60%e9%80%8f%e6%98%8e02%e6%a8%b9%e8%84%82%e6%bf%be%e6%9d%af'
-              },
-              {
-                name: 'Switch 濾杯',
-                img: 'https://m.media-amazon.com/images/I/61D-zsF39HL._AC_SX679_.jpg',
-                desc: '結合浸泡與濾滴，可控時間與流速，萃取層次更豐富。',
-                link: 'https://www.hario.com.tw/?product=%e6%b5%b8%e6%bc%ac%e5%bc%8f%e6%bf%be%e6%9d%af%e7%b5%84'
-              },
-              {
-                name: '川流濾杯',
-                img: 'https://www.fengjen.com.tw/upload/catalog_b/twL_catalog_23J16_vbw4h9zkAc.jpg',
-                desc: '水流集中、萃取穩定，適合中深焙，口感厚實。',
-                link: 'https://www.fengjen.com.tw/catalog-detail/352/'
-              },
-              {
-                name: '星芒濾杯',
-                img: 'https://i1.momoshop.com.tw/1727693320/goodsimg/0010/681/959/10681959_R1.webp',
-                desc: '星型肋骨帶來中庸流速與均勻萃取，風味平衡。',
-                link: 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=10681959&Area=search&mdiv=403&oid=1_3&cid=index&kw=%E6%98%9F%E8%8A%92%E6%BF%BE%E6%9D%AF'
-              },
-              {
-                name: '花瓣濾杯',
-                img: 'https://resize-image.vocus.cc/resize?norotation=true&quality=80&url=https%3A%2F%2Fimages.vocus.cc%2F79bbda9c-2264-4e55-9231-23d08d0d389a.jpg&width=740&sign=_0IZN_GbUEOD0nMADGuCGHid4ZeXpX0wRGrIz86tzso',
-                desc: '花瓣狀內壁增進導流與排氣，更多絲滑的口感，層次明顯，溫潤入口',
-                link: 'https://vocus.cc/article/5c6d0de2fd89780001eb3e01'
-              },
-              {
-                name: '冰瞳濾杯',
-                img: 'https://cdn.store-assets.com/s/1163940/i/78773780.jpeg',
-                desc: '透明結構便於觀察流速， 高通透性避免塞水。',
-                link: 'https://www.xn--14us3q.tw/collections/%E5%92%96%E5%95%A1%E6%BF%BE%E6%9D%AF/products/%E6%B3%B0%E6%91%A9%E5%92%96%E5%95%A1-%E6%A8%B9%E8%84%82%E5%86%B0%E7%9E%B301%E6%BF%BE%E6%9D%AF-%E6%A5%B5%E9%80%9F%E7%89%88-'
-              }
-            ].map((cup) => (
-              <div key={cup.name} className="min-w-[240px] bg-gray-50 rounded-xl p-4 border flex-shrink-0">
-                <div className="rounded-md w-full h-44 overflow-hidden bg-white border">
-                  <img src={cup.img} alt={cup.name} className="w-full h-full object-contain" />
-                </div>
-                <h3 className="text-sm font-semibold mt-3 mb-1">{cup.name}</h3>
-                <p className="text-xs text-gray-600 leading-relaxed min-h-[2.5rem]">{cup.desc}</p>
-                {cup.link && (
-                  <a
-                    href={cup.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-600 no-hover inline-block mt-2"
-                  >
-                    查看詳情
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-        
-        {/* Appier 咖啡地圖區塊 */}
-        <section className="p-8 bg-white border-t">
-          <h2 className="text-2xl font-semibold mb-4">Appier 咖啡地圖</h2>
-          <a href="https://www.google.com/maps/d/edit?mid=1NjYyXrB2906wevRDK0G3SUQUTgWb9Bw&usp=sharing">https://www.google.com/maps/d/edit?mid=1NjYyXrB2906wevRDK0G3SUQUTgWb9Bw&usp=sharing</a>
-        </section>
-
+  <style>
+    a.no-hover:hover { text-decoration: none !important; color: inherit !important; }
+    /* small helpers */
+    .icon-3xl { font-size: 1.75rem; line-height: 1; }
+    .max-h-100 { max-height: 25rem; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900 p-6 md:p-10 font-sans">
+  <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden">
+    <header class="flex items-center justify-between p-6 border-b">
+      <div>
+        <h1 class="text-2xl font-semibold">設備清單</h1>
+        <p class="text-sm text-gray-500 mt-1">樓層按順序顯示：7F → 8F → 9F。點擊物品可查看詳情。</p>
       </div>
-    </div>
-  );
-}
+      <div id="floor-buttons" class="flex gap-2"></div>
+    </header>
 
+    <main class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:p-8">
+      <section class="md:col-span-2">
+        <div class="rounded-xl p-4 border bg-gray-50">
+          <div id="items-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center"></div>
+        </div>
+      </section>
+
+      <aside class="md:col-span-1">
+        <div class="sticky top-6 bg-gray-50 p-4 rounded-xl border h-full space-y-6" id="detail-panel">
+          <div>
+            <h3 class="text-sm font-semibold">詳情面板</h3>
+            <div id="detail-content" class="text-sm text-gray-500 mt-3">尚未選取任何物品。點擊左側的圖示查看細節。</div>
+          </div>
+
+          <div id="burr-info"></div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 刀盤介紹 -->
+    <section class="p-8 bg-white border-t">
+      <h2 class="text-2xl font-semibold mb-4">刀盤介紹</h2>
+      <div class="text-sm text-gray-700 leading-relaxed space-y-3">
+        <p>在研磨咖啡豆過程中，「刀盤」是直接影響粉粒分布、顆粒均勻度與風味表現的關鍵元件。根據 <a href="https://www.femobook.com.tw/blogs/coffee-information/186696" target="_blank" rel="noopener noreferrer" class="text-blue-600">Femobook</a> 的分析，不同形式的刀盤（平刀、錐刀、鬼齒刀）各有其特性。</p>
+        <ul class="list-disc list-inside space-y-1">
+          <li><strong>平刀（Flat Burr）</strong>：粉粒分布集中，風味乾淨、明亮，適合追求層次分明的風味表現。</li>
+          <li><strong>錐刀（Conical Burr）</strong>：粉粒雙峰分佈，風味醇厚、層次豐富，保留更多香氣。</li>
+          <li><strong>鬼齒刀（Serrated Burr）</strong>：研磨速度快、顆粒均勻，風味平衡且乾淨。</li>
+        </ul>
+        <p>目前公司使用的刀盤型號為 <strong>S2C890</strong> 與 <strong>S2C660</strong>。</p>
+
+        <div class="overflow-x-auto flex gap-4 pb-4">
+          <img src="https://ae01.alicdn.com/kf/S78f155549e64433cbdad5e1067d26ea8K.jpg" alt="S2C890" class="rounded-lg border mb-3 object-contain max-h-100 w-full" />
+        </div>
+        <p>參考文件：<a href="https://ptt.reviews/Coffee/E.NKiLFSkA6qEs" target="_blank" rel="noopener noreferrer" class="text-blue-600">[器材] 市面常見手搖磨豆機的錐刀設計理論 - PTT評價</a></p>
+      </div>
+    </section>
+
+    <!-- 濾杯介紹區塊 -->
+    <section class="p-8 bg-white border-t">
+      <h2 class="text-2xl font-semibold mb-4">濾杯介紹</h2>
+      <div id="cups" class="overflow-x-auto flex gap-4 pb-4"></div>
+    </section>
+
+    <!-- Appier 咖啡地圖區塊 -->
+    <section class="p-8 bg-white border-t">
+      <h2 class="text-2xl font-semibold mb-4">Appier 咖啡地圖</h2>
+      <a href="https://www.google.com/maps/d/edit?mid=1NjYyXrB2906wevRDK0G3SUQUTgWb9Bw&usp=sharing" target="_blank" rel="noopener noreferrer" class="text-blue-600 break-all">https://www.google.com/maps/d/edit?mid=1NjYyXrB2906wevRDK0G3SUQUTgWb9Bw&usp=sharing</a>
+    </section>
+  </div>
+
+  <script>
+    // Data ported from original JS
+    const FLOORS = [
+      {
+        id: "7F",
+        items: [
+          { key: "kettle", title: "FELLOW Stagg EKG 電子溫控手沖壺 白 600ml" },
+          { key: "grinder", title: "1Z X-Ultra", link: "https://1zpresso.coffee/product/xultra/", burr: "1Z X-Ultra 40mm 七芯刀盤" },
+          { key: "scale", title: "黑鏡DUO" },
+          { key: "dripper", title: "switch / v60 / 星芒 / 冰瞳" },
+        ],
+      },
+      {
+        id: "8F",
+        items: [
+          { key: "kettle", title: "Timemore Smart 溫控手沖壺 黑 800ml" },
+          { key: "grinder", title: "泰摩 栗子S3 手搖磨豆機", link: "https://www.jmi-mart.com/product/detail/1751876", burr: "栗子刀盤 S2C890", burrLink: "https://m.media-amazon.com/images/I/51f1N3s0qXL._AC_UF894,1000_QL80_.jpg" },
+          { key: "scale", title: "HARIO 北極星咖啡秤" },
+          { key: "dripper", title: "v60 / 川流 / 花瓣" },
+        ],
+      },
+      {
+        id: "9F",
+        items: [
+          { key: "kettle", title: "FELLOW Stagg EKG 電子溫控手沖壺 黑 600ml" },
+          { key: "grinder", title: "泰摩手搖 C3", link: "https://buoncaffe.com.tw/products/timemore-grinder-c3/", burr: "C3 刀盤 S2C660", burrLink: "https://www.timemore.com.au/cdn/shop/products/Timemore-S2C660.jpg?v=1681275552&width=2048" },
+          { key: "scale", title: "(無/待補)" },
+          { key: "dripper", title: "v60 / 川流 / 冰瞳" },
+        ],
+      },
+    ];
+
+    const ICONS = {
+      kettle: "☕",
+      grinder: "🌀",
+      scale: "⚖️",
+      dripper: "🧊",
+    };
+
+    const cupsData = [
+      {
+        name: 'V60 濾杯',
+        img: 'https://w7.pngwing.com/pngs/717/935/png-transparent-brewed-coffee-espresso-dolce-gusto-hario-coffee-glass-coffee-saucer-thumbnail.png',
+        desc: '經典螺旋肋骨設計，流速快，風味乾淨明亮。',
+        link: 'https://www.hario.com.tw/?product=v60%e9%80%8f%e6%98%8e02%e6%a8%b9%e8%84%82%e6%bf%be%e6%9d%af'
+      },
+      {
+        name: 'Switch 濾杯',
+        img: 'https://m.media-amazon.com/images/I/61D-zsF39HL._AC_SX679_.jpg',
+        desc: '結合浸泡與濾滴，可控時間與流速，萃取層次更豐富。',
+        link: 'https://www.hario.com.tw/?product=%e6%b5%b8%e6%bc%ac%e5%bc%8f%e6%bf%be%e6%9d%af%e7%b5%84'
+      },
+      {
+        name: '川流濾杯',
+        img: 'https://www.fengjen.com.tw/upload/catalog_b/twL_catalog_23J16_vbw4h9zkAc.jpg',
+        desc: '水流集中、萃取穩定，適合中深焙，口感厚實。',
+        link: 'https://www.fengjen.com.tw/catalog-detail/352/'
+      },
+      {
+        name: '星芒濾杯',
+        img: 'https://i1.momoshop.com.tw/1727693320/goodsimg/0010/681/959/10681959_R1.webp',
+        desc: '星型肋骨帶來中庸流速與均勻萃取，風味平衡。',
+        link: 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=10681959&Area=search&mdiv=403&oid=1_3&cid=index&kw=%E6%98%9F%E8%8A%92%E6%BF%BE%E6%9D%AF'
+      },
+      {
+        name: '花瓣濾杯',
+        img: 'https://resize-image.vocus.cc/resize?norotation=true&quality=80&url=https%3A%2F%2Fimages.vocus.cc%2F79bbda9c-2264-4e55-9231-23d08d0d389a.jpg&width=740&sign=_0IZN_GbUEOD0nMADGuCGHid4ZeXpX0wRGrIz86tzso',
+        desc: '花瓣狀內壁增進導流與排氣，更多絲滑的口感，層次明顯，溫潤入口',
+        link: 'https://vocus.cc/article/5c6d0de2fd89780001eb3e01'
+      },
+      {
+        name: '冰瞳濾杯',
+        img: 'https://cdn.store-assets.com/s/1163940/i/78773780.jpeg',
+        desc: '透明結構便於觀察流速， 高通透性避免塞水。',
+        link: 'https://www.xn--14us3q.tw/collections/%E5%92%96%E5%95%A1%E6%BF%BE%E6%9D%AF/products/%E6%B3%B0%E6%91%A9%E5%92%96%E5%95%A1-%E6%A8%B9%E8%84%82%E5%86%B0%E7%9E%B301%E6%BF%BE%E6%9D%AF-%E6%A5%B5%E9%80%9F%E7%89%88-'
+      }
+    ];
+
+    // State
+    let activeFloorIndex = 0;
+    let selectedItem = null;
+
+    // DOM refs
+    const floorButtonsEl = document.getElementById('floor-buttons');
+    const itemsGridEl = document.getElementById('items-grid');
+    const detailContentEl = document.getElementById('detail-content');
+    const burrInfoEl = document.getElementById('burr-info');
+    const cupsEl = document.getElementById('cups');
+
+    function renderFloorButtons() {
+      floorButtonsEl.innerHTML = '';
+      FLOORS.forEach((f, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = f.id;
+        btn.className = `px-3 py-1 rounded-md text-sm font-medium ${idx === activeFloorIndex ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'}`;
+        btn.addEventListener('click', () => {
+          activeFloorIndex = idx;
+          selectedItem = null;
+          renderAll();
+        });
+        floorButtonsEl.appendChild(btn);
+      });
+    }
+
+    function renderItems() {
+      const activeFloor = FLOORS[activeFloorIndex];
+      itemsGridEl.innerHTML = '';
+      activeFloor.items.forEach(it => {
+        const btn = document.createElement('button');
+        btn.className = 'group flex flex-col items-center gap-2 p-3 rounded-lg hover:shadow-md transition-shadow bg-white';
+        btn.addEventListener('click', () => {
+          selectedItem = { ...it, floor: activeFloor.id };
+          renderDetail();
+        });
+
+        const icon = document.createElement('div');
+        icon.className = 'icon-3xl';
+        icon.textContent = ICONS[it.key] || '•';
+
+        const title = document.createElement('div');
+        title.className = 'text-xs text-center text-gray-700 px-1 font-medium';
+        title.style.maxWidth = '140px';
+        title.textContent = it.title;
+
+        const hint = document.createElement('div');
+        hint.className = 'mt-1 text-xs text-gray-400';
+        hint.textContent = '點擊查看';
+
+        btn.appendChild(icon);
+        btn.appendChild(title);
+        btn.appendChild(hint);
+
+        itemsGridEl.appendChild(btn);
+      });
+    }
+
+    function renderDetail() {
+      if (!selectedItem) {
+        detailContentEl.innerHTML = '尚未選取任何物品。點擊左側的圖示查看細節。';
+        burrInfoEl.innerHTML = '';
+        return;
+      }
+
+      // main details
+      detailContentEl.innerHTML = `
+        <div class="mt-3 space-y-3">
+          <div>
+            <div class="text-sm text-gray-600">樓層</div>
+            <div class="font-medium">${escapeHtml(selectedItem.floor)}</div>
+          </div>
+          <div>
+            <div class="text-sm text-gray-600">設備</div>
+            <div class="font-medium">${escapeHtml(selectedItem.title)}</div>
+          </div>
+          ${selectedItem.link ? `
+            <div class="mt-4 border-t pt-3">
+              <div class="text-sm text-gray-600 font-medium mb-2">產品連結</div>
+              <a href="${escapeAttr(selectedItem.link)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 text-sm block break-all no-hover">前往商品頁面</a>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // burr info
+      if (selectedItem.burr) {
+        burrInfoEl.innerHTML = `
+          <div class="border-t pt-3">
+            <h3 class="text-sm font-semibold mb-2">刀盤資訊</h3>
+            <div class="text-sm text-gray-700">${escapeHtml(selectedItem.burr)}</div>
+            ${selectedItem.burrLink ? `<img src="${escapeAttr(selectedItem.burrLink)}" alt="${escapeAttr(selectedItem.burr)}" class="mt-2 rounded-lg border object-contain max-h-60 w-full" />` : ''}
+          </div>
+        `;
+      } else {
+        burrInfoEl.innerHTML = '';
+      }
+    }
+
+    function renderCups() {
+      cupsEl.innerHTML = '';
+      cupsData.forEach(cup => {
+        const card = document.createElement('div');
+        card.className = 'min-w-[240px] bg-gray-50 rounded-xl p-4 border flex-shrink-0';
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'rounded-md w-full h-44 overflow-hidden bg-white border';
+
+        const img = document.createElement('img');
+        img.src = cup.img;
+        img.alt = cup.name;
+        img.className = 'w-full h-full object-contain';
+
+        imgWrap.appendChild(img);
+        const h3 = document.createElement('h3');
+        h3.className = 'text-sm font-semibold mt-3 mb-1';
+        h3.textContent = cup.name;
+
+        const p = document.createElement('p');
+        p.className = 'text-xs text-gray-600 leading-relaxed min-h-[2.5rem]';
+        p.textContent = cup.desc;
+
+        card.appendChild(imgWrap);
+        card.appendChild(h3);
+        card.appendChild(p);
+
+        if (cup.link) {
+          const a = document.createElement('a');
+          a.href = cup.link;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'text-xs text-blue-600 no-hover inline-block mt-2';
+          a.textContent = '查看詳情';
+          card.appendChild(a);
+        }
+
+        cupsEl.appendChild(card);
+      });
+    }
+
+    function renderAll() {
+      renderFloorButtons();
+      renderItems();
+      renderDetail();
+      renderCups();
+    }
+
+    // Small helpers to avoid XSS when generating innerHTML
+    function escapeHtml(str) {
+      if (!str && str !== 0) return '';
+      return String(str).replace(/[&<>"']/g, function (m) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
+      });
+    }
+    function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+
+    // initial render
+    renderAll();
+  </script>
+</body>
+</html>
