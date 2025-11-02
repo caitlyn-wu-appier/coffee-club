@@ -78,6 +78,10 @@
     <!-- Flavor Wheel-->
     <section class="p-8 bg-white border-t">
       <h2 class="text-2xl font-semibold mb-4">風味輪</h2>
+      <div id="flavor" class="overflow-x-auto flex gap-4 pb-4"></div>
+    </section>
+    <section class="p-8 bg-white border-t">
+      <h2 class="text-2xl font-semibold mb-4">風味輪</h2>
       <a href="https://www.jasondavies.com/coffee-wheel/" target="_blank" rel="noopener noreferrer" class="text-blue-600 break-all">2015 Flavor Wheel</a>
       <a href="https://notbadcoffee.com/flavor-wheel-en/" target="_blank" rel="noopener noreferrer" class="text-blue-600 break-all">2025 Flavor Wheel</a>
     </section>
@@ -164,6 +168,55 @@
       }
     ];
 
+
+    const flavorsData = [
+        {
+          name: 'Sweet（甜）',
+          file: 'sweet',
+          desc: '指咖啡本身的天然甜味（非加糖），是高品質咖啡常見且可喜的特性，帶來愉悅感。'
+        },
+        {
+          name: 'Floral（花香）',
+          file: 'floral',
+          desc: '細緻清爽的花香，常見於淺烘焙的優質 Arabica，代表清雅、蜂蜜或花瓣類香氣。'
+        },
+        {
+          name: 'Fruity（果香）',
+          file: 'fruity',
+          desc: '泛指新鮮、甜美、酸爽或多汁的果類香氣（如柑橘、莓果、乾果等），是杯測中重要的複雜度來源。'
+        },
+        {
+          name: 'Sour / Fermented（酸 / 發酵）',
+          file: 'fermented',
+          desc: '包含明顯的酸感或發酵類風味：酸度可增加層次感，發酵性風味若過強則可能為處理或缺陷來源。'
+        },
+        {
+          name: 'Green / Vegetative（青蔬 / 草本）',
+          file: 'green',
+          desc: '表現為生青、草本或蔬菜類的味道；有時源於烘焙不足或生豆特性，未必等同缺陷。'
+        },
+        {
+          name: 'Roasted（烘焙）',
+          file: 'roasted',
+          desc: '由烘焙產生的風味（梅納反應、焦糖化等），如烘烤、焦糖、烘焙糕點或可可感，為風味添深度。'
+        },
+        {
+          name: 'Spices（香料）',
+          file: 'spices',
+          desc: '近似辛香料的香氣（溫暖、辛香），多見於中深焙或特定產區，來自風味化學反應或原料特性。'
+        },
+        {
+          name: 'Nutty / Cocoa（堅果 / 可可）',
+          file: 'nutty',
+          desc: '帶堅果或巧克力感的溫暖甜味，常見於中深焙，提供厚度與熟成感。'
+        },
+        {
+          name: 'Other（其他 / 缺陷）',
+          file: 'other',
+          desc: '用於標示不良或異常風味（異味、污味等），便於追溯與分析缺陷來源。'
+        }
+    ];
+
     // State
     let activeFloorIndex = 0;
     let selectedItem = null;
@@ -174,6 +227,7 @@
     const detailContentEl = document.getElementById('detail-content');
     const burrInfoEl = document.getElementById('burr-info');
     const cupsEl = document.getElementById('cups');
+    const flavorsEl = document.getElementById('flavor');
 
     function renderFloorButtons() {
       floorButtonsEl.innerHTML = '';
@@ -310,11 +364,49 @@
       });
     }
 
+    function renderFlavor() {
+      flavorsEl.innerHTML = '';
+      flavorsData.forEach(flavor => {
+        const card = document.createElement('div');
+        card.className = 'min-w-[240px] bg-gray-50 rounded-xl p-4 border flex-shrink-0';
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'rounded-md w-full h-44 overflow-hidden bg-white border';
+
+        const img = document.createElement('img');
+        img.className = 'flavor-img';
+        img.alt = flavor.name;
+        img.src = `${ICON_DIR}/flavors/${flavor.file}.jpg`;
+        // fallback to a small colored placeholder if image missing
+        img.onerror = function () {
+          this.onerror = null;
+          this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="55%" font-size="12" text-anchor="middle" fill="%2371717a">${encodeURIComponent(it.key)}</text></svg>';
+        };
+
+        imgWrap.appendChild(img);
+        const h3 = document.createElement('h3');
+        h3.className = 'text-sm font-semibold mt-3 mb-1';
+        h3.textContent = flavor.name;
+
+        const p = document.createElement('p');
+        p.className = 'text-xs text-gray-600 leading-relaxed min-h-[2.5rem]';
+        p.textContent = flavor.desc;
+
+        card.appendChild(imgWrap);
+        card.appendChild(h3);
+        card.appendChild(p);
+
+        flavorsEl.appendChild(card);
+      });
+    }
+
+
     function renderAll() {
       renderFloorButtons();
       renderItems();
       renderDetail();
       renderCups();
+      renderFlavor();
     }
 
     // Small helpers to avoid XSS when generating innerHTML
