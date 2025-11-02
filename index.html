@@ -122,6 +122,9 @@
       dripper: "▽",
     };
 
+    // icons are image files named by the item key, e.g. ./icons/kettle.jpg
+    const ICON_DIR = './img';
+
     const cupsData = [
       {
         name: 'V60 濾杯',
@@ -198,9 +201,15 @@
           renderDetail();
         });
 
-        const icon = document.createElement('div');
-        icon.className = 'icon-3xl';
-        icon.textContent = ICONS[it.key] || '•';
+        const icon = document.createElement('img');
+        icon.className = 'icon-img';
+        icon.alt = it.key;
+        icon.src = `${ICON_DIR}/${it.key}.jpg`;
+        // fallback to a small colored placeholder if image missing
+        icon.onerror = function () {
+          this.onerror = null;
+          this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="55%" font-size="12" text-anchor="middle" fill="%2371717a">${encodeURIComponent(it.key)}</text></svg>';
+        };
 
         const title = document.createElement('div');
         title.className = 'text-xs text-center text-gray-700 px-1 font-medium';
